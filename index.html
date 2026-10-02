@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estilo de vida e treino — Vega-Lite</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      color: #1f2a37;
+      background: #ffffff;
+      line-height: 1.6;
+    }
+    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.3rem; margin-top: 2.5rem; }
+    p  { max-width: 65ch; }
+    .grafico { overflow-x: auto; }
+    .autora { margin-top: 0; color: #5b6573; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>Estilo de vida e treino</h1>
+  <p class="autora">Por Luiza Esther Martins</p>
+  <p>Visualizações feitas com Vega-Lite a partir de um conjunto de dados sobre o estilo de vida e a saúde de 20.000 indivíduos.</p>
+
+  <h2>Média de calorias queimadas por tipo de treino</h2>
+  <div id="barras" class="grafico"></div>
+
+  <h2>Duração da sessão versus calorias queimadas, por gênero</h2>
+  <div id="scatters" class="grafico"></div>
+
+  <script>
+    const dados = { url: "life_style_data.csv" };
+
+    // Exercício 1 — barras agregadas em ordem crescente, com rótulos
+    const specBarras = {
+      $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+      data: dados,
+      title: "Média de calorias queimadas por tipo de treino",
+      width: 400,
+      height: 300,
+      encoding: {
+        x: { field: "Workout_Type", type: "nominal", sort: "y", title: "Tipo de treino", axis: { labelAngle: 0 } },
+        y: { field: "Calories_Burned", type: "quantitative", aggregate: "mean", title: "Média de calorias queimadas" },
+        tooltip: [
+          { field: "Workout_Type", type: "nominal", title: "Tipo de treino" },
+          { field: "Calories_Burned", type: "quantitative", aggregate: "mean", title: "Média de calorias", format: ".1f" }
+        ]
+      },
+      layer: [
+        { mark: { type: "bar", color: "#4C78A8" } },
+        {
+          mark: { type: "text", dy: -8, fontSize: 12 },
+          encoding: { text: { field: "Calories_Burned", type: "quantitative", aggregate: "mean", format: ".0f" } }
+        }
+      ]
+    };
+
+    // Exercício 2 — um scatterplot para homens e outro para mulheres
+    const scatter = (genero, titulo) => ({
+      title: titulo,
+      transform: [{ filter: `datum.Gender === '${genero}'` }],
+      mark: { type: "point", filled: true, opacity: 0.3, size: 10 },
+      width: 300,
+      height: 300,
+      encoding: {
+        x: { field: "Session_Duration (hours)", type: "quantitative", title: "Duração da sessão (horas)" },
+        y: { field: "Calories_Burned", type: "quantitative", title: "Calorias queimadas" },
+        color: { field: "Workout_Type", type: "nominal", title: "Tipo de treino" }
+      }
+    });
+
+    const specScatters = {
+      $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+      data: dados,
+      hconcat: [scatter("Male", "Homens"), scatter("Female", "Mulheres")],
+      resolve: { scale: { x: "shared", y: "shared" } }
+    };
+
+    vegaEmbed("#barras", specBarras);
+    vegaEmbed("#scatters", specScatters);
+  </script>
+</body>
+</html>
