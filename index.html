@@ -3,37 +3,113 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Estilo de vida e treino — Vega-Lite</title>
+  <title>Estilo de vida e treino | Luiza Esther Martins</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
   <style>
-    body {
-      font-family: Georgia, "Times New Roman", serif;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem 1.25rem 4rem;
-      color: #1f2a37;
-      background: #ffffff;
-      line-height: 1.6;
+    :root {
+      --texto: #1f2a37;
+      --suave: #5b6573;
+      --linha: #dfe3e8;
+      --destaque: #4C78A8;
+      --fundo: #ffffff;
+      --fundo-nota: #f4f6f9;
     }
-    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
-    h2 { font-size: 1.3rem; margin-top: 2.5rem; }
-    p  { max-width: 65ch; }
-    .grafico { overflow-x: auto; }
-    .autora { margin-top: 0; color: #5b6573; font-style: italic; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+      font-size: 1.075rem;
+      line-height: 1.65;
+      color: var(--texto);
+      background: var(--fundo);
+    }
+    main, header, footer {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    .topo {
+      background: #1d3557;
+      color: #ffffff;
+    }
+    .topo header { padding-top: 3.5rem; padding-bottom: 2.5rem; }
+    h1 { font-size: 2.6rem; line-height: 1.15; margin: 0 0 0.5rem; font-weight: 700; }
+    .autora { margin: 0; color: #c9d6e8; }
+    .intro { max-width: 62ch; margin: 1.25rem 0 0; color: #e8eef6; }
+    /* Faixa com as cores dos quatro tipos de treino usadas no scatterplot */
+    .faixa { display: flex; height: 6px; }
+    .faixa span { flex: 1; }
+    .faixa .cardio   { background: #4c78a8; }
+    .faixa .hiit     { background: #f58518; }
+    .faixa .strength { background: #e45756; }
+    .faixa .yoga     { background: #72b7b2; }
+    section { padding: 2.5rem 0 1rem; }
+    section + section { border-top: 1px solid var(--linha); }
+    h2 { font-size: 1.45rem; line-height: 1.3; margin: 0 0 0.75rem; font-weight: 600; }
+    section p { max-width: 62ch; }
+    .grafico { overflow-x: auto; margin: 1.5rem 0; }
+    .nota {
+      max-width: 62ch;
+      background: var(--fundo-nota);
+      border-left: 3px solid var(--destaque);
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .nota p { margin: 0; }
+    footer {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      padding-bottom: 3rem;
+      border-top: 1px solid var(--linha);
+      color: var(--suave);
+      font-size: 0.95rem;
+    }
+    footer p { margin: 0.25rem 0; }
+    a { color: var(--destaque); }
+    a:focus-visible { outline: 2px solid var(--destaque); outline-offset: 2px; }
+    main section:first-child { padding-top: 3rem; }
+    @media (max-width: 600px) { h1 { font-size: 1.9rem; } }
   </style>
 </head>
 <body>
-  <h1>Estilo de vida e treino</h1>
-  <p class="autora">Por Luiza Esther Martins</p>
-  <p>Visualizações feitas com Vega-Lite a partir de um conjunto de dados sobre o estilo de vida e a saúde de 20.000 indivíduos.</p>
+  <div class="topo">
+  <header>
+    <h1>Estilo de vida e treino</h1>
+    <p class="autora">Por Luiza Esther Martins</p>
+    <p class="intro">Duas visualizações feitas com Vega-Lite a partir de um conjunto de dados sobre o estilo de vida e a saúde de 20.000 indivíduos.</p>
+  </header>
+  <div class="faixa" aria-hidden="true"><span class="cardio"></span><span class="hiit"></span><span class="strength"></span><span class="yoga"></span></div>
+  </div>
 
-  <h2>Média de calorias queimadas por tipo de treino</h2>
-  <div id="barras" class="grafico"></div>
+  <main>
+    <section>
+      <h2>Média de calorias queimadas por tipo de treino</h2>
+      <p>Cada barra mostra a média de calorias queimadas por sessão em cada tipo de treino, em ordem crescente.</p>
+      <div id="barras" class="grafico" role="img" aria-label="Gráfico de barras com a média de calorias queimadas por tipo de treino: Yoga 897, Cardio 1212, Strength 1361 e HIIT 1653."></div>
+      <div class="nota">
+        <p>O HIIT é o treino que mais gasta energia: em média, 1.653 calorias por sessão, cerca de 84% a mais que o Yoga (897). Cardio e Strength ficam no meio do caminho.</p>
+      </div>
+    </section>
 
-  <h2>Duração da sessão versus calorias queimadas, por gênero</h2>
-  <div id="scatters" class="grafico"></div>
+    <section>
+      <h2>Duração da sessão versus calorias queimadas, por gênero</h2>
+      <p>Cada ponto é um indivíduo. O gráfico da esquerda mostra os homens e o da direita, as mulheres, com as mesmas escalas para permitir a comparação. As cores indicam o tipo de treino.</p>
+      <div id="scatters" class="grafico" role="img" aria-label="Dois gráficos de dispersão lado a lado, para homens e mulheres, relacionando a duração da sessão às calorias queimadas, coloridos por tipo de treino."></div>
+      <div class="nota">
+        <p>Quanto mais longa a sessão, mais calorias são queimadas, e a relação é quase perfeitamente linear. Os pontos formam retas porque, neste conjunto de dados, cada tipo de treino tem uma taxa de gasto por hora praticamente fixa, que varia um pouco com o nível de experiência. Os dois gráficos são quase idênticos: homens e mulheres queimam, em média, a mesma quantidade de calorias (cerca de 1.280 por sessão).</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Atividade de Vega-Lite API, disciplina de Visualização de Dados.</p>
+    <p>Dados: conjunto <em>life_style_data</em>, com 20.000 registros sobre estilo de vida e saúde.</p>
+  </footer>
 
   <script>
     const dados = { url: "life_style_data.csv" };
@@ -72,7 +148,7 @@
       encoding: {
         x: { field: "Session_Duration (hours)", type: "quantitative", title: "Duração da sessão (horas)" },
         y: { field: "Calories_Burned", type: "quantitative", title: "Calorias queimadas" },
-        color: { field: "Workout_Type", type: "nominal", title: "Tipo de treino" }
+        color: { field: "Workout_Type", type: "nominal", title: "Tipo de treino", legend: { symbolOpacity: 1 } }
       }
     });
 
@@ -83,8 +159,9 @@
       resolve: { scale: { x: "shared", y: "shared" } }
     };
 
-    vegaEmbed("#barras", specBarras);
-    vegaEmbed("#scatters", specScatters);
+    const opcoes = { actions: false };
+    vegaEmbed("#barras", specBarras, opcoes);
+    vegaEmbed("#scatters", specScatters, opcoes);
   </script>
 </body>
 </html>
